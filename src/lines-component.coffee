@@ -19,7 +19,7 @@ module.exports =
 class LinesComponent extends TiledComponent
   placeholderTextDiv: null
 
-  constructor: ({@presenter, @domElementPool, @assert}) ->
+  constructor: ({@views, @presenter, @domElementPool, @assert}) ->
     @domNode = document.createElement('div')
     @domNode.classList.add('lines')
     @tilesNode = document.createElement("div")
@@ -59,7 +59,7 @@ class LinesComponent extends TiledComponent
 
     @cursorsComponent.updateSync(state)
 
-  buildComponentForTile: (id) -> new LinesTileComponent({id, @presenter, @domElementPool, @assert})
+  buildComponentForTile: (id) -> new LinesTileComponent({id, @presenter, @domElementPool, @assert, @views})
 
   buildEmptyState: ->
     {tiles: {}}
@@ -82,6 +82,10 @@ class LinesComponent extends TiledComponent
 
     @presenter.setLineHeight(lineHeightInPixels)
     @presenter.setBaseCharacterWidth(defaultCharWidth, doubleWidthCharWidth, halfWidthCharWidth, koreanCharWidth)
+
+  measureBlockDecorations: ->
+    for component in @getComponents()
+      component.measureBlockDecorations()
 
   lineIdForScreenRow: (screenRow) ->
     tile = @presenter.tileForRow(screenRow)
